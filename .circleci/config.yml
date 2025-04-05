@@ -1,0 +1,41 @@
+version: 2.1
+
+orbs:
+  aws-ecr: circleci/aws-ecr@9.5.0
+  sonarcloud: sonarsource/sonarcloud@2.0.0
+
+executors:
+  default:
+    docker:
+      - image: cimg/openjdk:11.0
+
+jobs:
+  build-and-test:
+    executor: default
+    steps:
+      - checkout
+      - run: mvn clean install
+      - run: mvn test
+      - sonarcloud/scan
+
+  dockerize-and-push:
+    executor: default
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: |
+          echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
+          docker build -t your-image-name .
+          docker tag your-image-name:latest your_aws_account_id.dkr.ecr.region.amazonaws.com/your-repo
+      - aws-ecr/push-image:
+          repo: your-repo
+          tag: latest
+
+workflows:
+  version: 2
+  ci-cd-flow:
+    jobs:
+      - build-and-test
+      - dockerize-and-push:
+          requires:
+            - build-and-test
