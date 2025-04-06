@@ -23,13 +23,10 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: |
-          echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
-          docker build -t your-image-name .
-          docker tag your-image-name:latest your_aws_account_id.dkr.ecr.region.amazonaws.com/your-repo
-      - aws-ecr/push-image:
-          repo: your-repo
-          tag: latest
+      - aws-ecr/build-and-push-image:
+          repo: circleciaws        # <-- Replace with your actual ECR repo name
+          tag: latest                  # Optional: change to `<< pipeline.git.revision >>` for unique tag
+          region: ap-south-1           # <-- Example: us-east-1
 
 workflows:
   version: 2
