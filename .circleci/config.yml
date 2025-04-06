@@ -16,12 +16,19 @@ jobs:
       - checkout
       - run: mvn clean install
       - run: mvn test
+      - persist_to_workspace:
+          root: .
+          paths:
+            - target
       - sonarcloud/scan
+
   docker-build-push:
     docker:
       - image: cimg/base:stable
     steps:
       - checkout
+      - attach_workspace:
+          at: .
       - setup_remote_docker
       - run:
           name: Install AWS CLI
