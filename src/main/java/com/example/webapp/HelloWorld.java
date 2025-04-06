@@ -3,6 +3,6 @@ package com.example.webapp;
 
 public class HelloWorld {
     public String sayHello() {
-        return "Hello, CircleCI and AWS!";
+        return "Hello, CircleCI & AWS!";
     }
 }
