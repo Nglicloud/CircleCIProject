@@ -9,6 +9,6 @@ public class HelloWorldTest {
     @Test
     public void testSayHello() {
         HelloWorld hw = new HelloWorld();
-        assertEquals("Hello, CircleCI and AWS!", hw.sayHello());
+        assertEquals("Hello, CircleCI & AWS!", hw.sayHello());
     }
 }
