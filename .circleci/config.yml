@@ -21,7 +21,11 @@ jobs:
           paths:
             - target
       - sonarcloud/scan
-
+      - run:
+          name: Upload Appspec to S3
+          command: |
+            zip -r myapp-deploy.zip appspec.yml scripts/
+            aws s3 cp myapp-deploy.zip s3://circleciawstest/
   docker-build-push:
     docker:
       - image: cimg/base:stable
