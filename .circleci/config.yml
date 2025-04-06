@@ -21,6 +21,21 @@ jobs:
           paths:
             - target
       - sonarcloud/scan
+  upload-to-s3:
+    docker:
+      - image: cimg/python:3.10  # Python image (supports pip and curl)
+    steps:
+      - checkout
+
+      - run:
+          name: Install AWS CLI
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y unzip curl
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+
       - run:
           name: Upload Appspec to S3
           command: |
@@ -56,6 +71,9 @@ workflows:
   ci-cd-flow:
     jobs:
       - build-and-test
+      - upload-to-s3:
+          requires:
+            - build-and-test
       - docker-build-push:
           requires:
             - build-and-test
