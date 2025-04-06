@@ -23,10 +23,4 @@ workflows:
   ci-cd-flow:
     jobs:
       - build-and-test
-      - aws-ecr/push-image:         # ✅ Use the orb-provided JOB, not a custom one
-          name: dockerize-and-push  # ✅ Optional: rename this job in your workflow
-          repo: circleciaws         # 🔁 Your actual ECR repository name
-          tag: latest               # Optional: << pipeline.git.revision >> for dynamic tagging
-          region: ap-south-1        # 🔁 Your AWS region
-          requires:
-            - build-and-test
+     
