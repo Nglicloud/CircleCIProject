@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  aws-ecr: circleci/aws-ecr@9.5.0
+  aws-ecr: circleci/aws-ecr@8.2.1   # ✅ use version 8.2.1, which supports the job below
   sonarcloud: sonarsource/sonarcloud@2.0.0
 
 executors:
@@ -18,21 +18,15 @@ jobs:
       - run: mvn test
       - sonarcloud/scan
 
-  dockerize-and-push:
-    executor: default
-    steps:
-      - checkout
-      - setup_remote_docker
-      - aws-ecr/build-and-push-image:
-          repo: circleciaws        # <-- Replace with your actual ECR repo name
-          tag: latest                  # Optional: change to `<< pipeline.git.revision >>` for unique tag
-          region: ap-south-1           # <-- Example: us-east-1
-
 workflows:
   version: 2
   ci-cd-flow:
     jobs:
       - build-and-test
-      - dockerize-and-push:
+      - aws-ecr/push-image:         # ✅ Use the orb-provided JOB, not a custom one
+          name: dockerize-and-push  # ✅ Optional: rename this job in your workflow
+          repo: circleciaws         # 🔁 Your actual ECR repository name
+          tag: latest               # Optional: << pipeline.git.revision >> for dynamic tagging
+          region: ap-south-1        # 🔁 Your AWS region
           requires:
             - build-and-test
