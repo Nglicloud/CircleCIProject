@@ -45,8 +45,8 @@ jobs:
       - run:
           name: Tag and Push image to ECR
           command: |
-            docker tag circleciaws:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/circleciaws:latest
-            docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/circleciaws:latest
+            docker tag circleciaws:latest 558342860244.dkr.ecr.$AWS_REGION.amazonaws.com/circleciaws:latest
+            docker push 558342860244.dkr.ecr.$AWS_REGION.amazonaws.com/circleciaws:latest
 workflows:
   version: 2
   ci-cd-flow:
